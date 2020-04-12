@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Calculator</title>
+	<link href="style.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+</head>
+
+<body>
+	<div class="container">
+		<p class="hide" id="error">You can't divide by zero</p>
+		<div class="calculator-body">
+			<div class="calculator-display"></div>
+			<div class="calculator-buttons">
+				<button class="calculator-button number">7</button>
+				<button class="calculator-button number">8</button>
+				<button class="calculator-button number">9</button>
+				<button class="calculator-button action" id="divide" disabled>/</button>
+				<button class="calculator-button number">4</button>
+				<button class="calculator-button number">5</button>
+				<button class="calculator-button number">6</button>
+				<button class="calculator-button action" id="multiply" disabled>*</button>
+				<button class="calculator-button number">1</button>
+				<button class="calculator-button number">2</button>
+				<button class="calculator-button number">3</button>
+				<button class="calculator-button action" id="minus" disabled>-</button>
+				<button class="calculator-button number">0</button>
+				<button class="calculator-button" id="point" disabled>.</button>
+				<button class="calculator-button action" id="equal" disabled>=</button>
+				<button class="calculator-button action" id="plus" disabled>+</button>
+			</div>
+		</div>
+	</div>
+	<script src="app.js"></script>
+</body>
+
+</html>
