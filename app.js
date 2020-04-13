@@ -1,70 +1,106 @@
-const numbers = document.querySelectorAll('.number');
-const actions = document.querySelectorAll('.action');
+const numbersBtns = document.querySelectorAll('.number');
+const actionsBtns = document.querySelectorAll('.action');
 const display = document.querySelector('.calculator-display');
 const errorMessage = document.getElementById('error');
 const point = document.getElementById('point');
-
 const equal = document.getElementById('equal');
+const clear = document.getElementById('clear')
 
-const mainContainer = [];
-const auxiliaryContainer = [];
-const actionsContainer = [];
-let counter = 0;
-
-numbers.forEach(i => i.addEventListener('click', numberToDisplay));
-point.addEventListener('click', pointToDisplay);
-actions.forEach(action => action.addEventListener('click', doAction));
-
-function pointToDisplay(e) {
-	auxiliaryContainer.push(e.target.textContent);
-	display.textContent += '.';
+const state = {
+	accumulator: [],
+	nextNumber: [],
+	action: ''
 }
 
-function numberToDisplay() {
-	if (!errorMessage.classList.contains('hide')) errorMessage.classList.add('hide');
-
-	actions.forEach(i => i.disabled = false);
-	point.disabled = false;
-
-	const number = event.target.textContent;
-	auxiliaryContainer.push(number);
-	display.textContent = parseFloat(auxiliaryContainer.join(''));
+const render = (item = 'accumulator') => {
+	console.log(state);
+	
+	errorMessage.classList.add('hide')
+	display.textContent = state[item].join('') 
 }
 
-function doAction(e) {
-	display.textContent = '';
-	actionsContainer.push(e.target.textContent);
-	mainContainer.push(+auxiliaryContainer.join(''));
-	auxiliaryContainer.splice(0, auxiliaryContainer.length);
-	if (mainContainer.length === 2) {
-		chooseAction();
-		mainContainer.splice(-1);
+const numberHandler = number => {
+	setActionBtnsAsEnabled()
+	state.nextNumber.push(number)
+	render('nextNumber')
+}
+
+const actionHandler = action => {
+	if (state.action === '/' && +state.nextNumber.join('') === 0) {
+		setActionBtnsAsDisabled()
+		errorMessage.classList.remove('hide')
+		state.accumulator = []
+		state.nextNumber = []
+		state.action = []
+		return
 	}
-	counter++;
-	display.textContent = mainContainer[0];
+	if (action === '=' && state.nextNumber.length === 0) return
+	if (action === '=') {
+		state.accumulator.push(+state.nextNumber.join(''))
+		doAction(state.action)
+		render()
+		state.nextNumber = []
+		state.nextNumber = [...state.accumulator]
+		state.accumulator = []
+		state.action = '='
+		return
+	}
+	if (action === '-' && state.nextNumber[state.nextNumber.length - 1] === '-') return
+	if (action === '-' && state.nextNumber.length === 0) {
+		state.nextNumber.push('-')
+		render('nextNumber')
+		return
+	}
+	if (action === '.' && state.nextNumber[state.nextNumber.length - 1] === '.') return
+	if (action === '.') {		
+		state.nextNumber.push('.')
+		render('nextNumber')
+		return
+	}
+	if (!state.action) {
+		state.accumulator.push(+state.nextNumber.join(''))
+	}
+	else {
+		state.accumulator.push(+state.nextNumber.join(''))
+		doAction(state.action)
+	}
+	state.nextNumber = []
+	state.action = action
+	render()
 }
 
-function chooseAction() {
-	switch (actionsContainer[counter - 1]) {
+const doAction = action => {
+	switch (action) {
 		case '+':
-			mainContainer[0] += mainContainer[1];
-			break;
+			return state.accumulator = [state.accumulator.reduce((accum, nextNumber) => accum + nextNumber)]
 		case '-':
-			mainContainer[0] -= mainContainer[1];
-			break;
+			return state.accumulator = [state.accumulator.reduce((accum, nextNumber) => accum - nextNumber)]
 		case '*':
-			mainContainer[0] *= mainContainer[1];
-			break;
+			return state.accumulator = [state.accumulator.reduce((accum, nextNumber) => accum * nextNumber)]
 		case '/':
-			if (mainContainer[1] === 0) {
-				errorMessage.classList.remove('hide');
-				mainContainer.splice(0, mainContainer.length);
-			}
-			mainContainer[0] /= mainContainer[1];
-			break;
-		case '=':
-			display.textContent = mainContainer[0];
+			return state.accumulator = [state.accumulator.reduce((accum, nextNumber) => accum / nextNumber)]
 		default:
-			break;
+			return
 	}
 }
+
+const setActionBtnsAsEnabled = () => {
+	document.querySelectorAll('.disableable').forEach(btn => btn.disabled = false)
+}
+
+const setActionBtnsAsDisabled = () => {
+	document.querySelectorAll('.disableable').forEach(btn => btn.disabled = true)
+}
+
+const clearHandler = () => {
+	setActionBtnsAsDisabled()
+	state.accumulator = []
+	state.nextNumber = []
+	state.action = []
+	render()
+	return
+}
+ 
+numbersBtns.forEach(numberBtn => numberBtn.addEventListener('click', () => numberHandler(numberBtn.textContent)))
+actionsBtns.forEach(actionBtn => actionBtn.addEventListener('click', () => actionHandler(actionBtn.textContent)))
+clear.addEventListener('click', clearHandler)
