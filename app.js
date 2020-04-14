@@ -2,8 +2,6 @@ const numbersBtns = document.querySelectorAll('.number');
 const actionsBtns = document.querySelectorAll('.action');
 const display = document.querySelector('.calculator-display');
 const errorMessage = document.getElementById('error');
-const point = document.getElementById('point');
-const equal = document.getElementById('equal');
 const clear = document.getElementById('clear')
 
 const state = {
