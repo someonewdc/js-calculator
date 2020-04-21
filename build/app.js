@@ -11,8 +11,6 @@ const state = {
 }
 
 const render = (item = 'accumulator') => {
-	console.log(state);
-	
 	errorMessage.classList.add('hide')
 	display.textContent = state[item].join('') 
 }

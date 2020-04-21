@@ -1,0 +1,23 @@
+{
+  "name": "js-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "homepage": "https://someonewdc.github.io/js-calculator",
+  "scripts": {
+    "deploy": "gh-pages -d build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/someonewdc/js-calculator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/someonewdc/js-calculator/issues"
+  },
+  "dependencies": {
+    "gh-pages": "^2.2.0"
+  }
+}
