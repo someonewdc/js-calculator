@@ -2,7 +2,8 @@ const numbersBtns = document.querySelectorAll('.number');
 const actionsBtns = document.querySelectorAll('.action');
 const display = document.querySelector('.calculator-display');
 const errorMessage = document.getElementById('error');
-const clear = document.getElementById('clear')
+const clearAll = document.getElementById('clear-all')
+const clearCurrent = document.getElementById('clear-current')
 
 const state = {
 	accumulator: [],
@@ -12,7 +13,12 @@ const state = {
 
 const render = (item = 'accumulator') => {
 	errorMessage.classList.add('hide')
-	display.textContent = state[item].join('') 
+	if (state[item].join('').length > 19 ) {
+		display.textContent = 'Number is too large'
+		state.nextNumber = []
+		state.accumulator = []
+	} else display.textContent = state[item].join('') 
+	
 }
 
 const numberHandler = number => {
@@ -22,12 +28,13 @@ const numberHandler = number => {
 }
 
 const actionHandler = action => {
-	if (state.action === '/' && +state.nextNumber.join('') === 0) {
+	if (state.action === '/' && state.nextNumber.join('') === '0') {
 		setActionBtnsAsDisabled()
 		errorMessage.classList.remove('hide')
 		state.accumulator = []
 		state.nextNumber = []
 		state.action = []
+		render()
 		return
 	}
 	if (action === '=' && state.nextNumber.length === 0) return
@@ -88,15 +95,29 @@ const setActionBtnsAsDisabled = () => {
 	document.querySelectorAll('.disableable').forEach(btn => btn.disabled = true)
 }
 
-const clearHandler = () => {
+const clearAllHandler = () => {
 	setActionBtnsAsDisabled()
 	state.accumulator = []
 	state.nextNumber = []
 	state.action = []
 	render()
-	return
+}
+
+const clearCurrentHandler = () => {
+	if (typeof state.nextNumber[0] === 'number') {
+		state.nextNumber = [state.nextNumber[0].toString().slice(0, -1)]
+		render('nextNumber')
+	} else if (state.nextNumber.length > 1) {
+		state.nextNumber.pop()
+		render('nextNumber')
+	} else {
+		state.nextNumber = [state.nextNumber[0].slice(0, -1)]
+		render('nextNumber')
+	}
+	
 }
  
 numbersBtns.forEach(numberBtn => numberBtn.addEventListener('click', () => numberHandler(numberBtn.textContent)))
 actionsBtns.forEach(actionBtn => actionBtn.addEventListener('click', () => actionHandler(actionBtn.textContent)))
-clear.addEventListener('click', clearHandler)
+clearAll.addEventListener('click', clearAllHandler)
+clearCurrent.addEventListener('click', clearCurrentHandler)
