@@ -69,7 +69,12 @@ button{
   border: 1px solid #d3d9de;
 }
 
-#clear {
+#clear-all {
+  width: 100%;
+  font-size: 22px;
+}
+
+#clear-current {
   width: 100%;
   font-size: 22px;
 }
